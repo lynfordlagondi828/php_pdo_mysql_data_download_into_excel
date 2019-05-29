@@ -2,7 +2,19 @@
     require_once 'include/Db_Function.php';
     $database = new Db_Function();
 
-    $result = $database->get_all_records();
+    $keyword = '';
+
+    if(isset($_POST["keyword"]))
+    {
+        $keyword = trim($_POST["keyword"]);
+    }
+
+    if($keyword =='')
+
+        $result = $database->get_all_records();
+
+    else 
+        $result = $database->search_book($keyword);
 
 ?>
 
@@ -14,6 +26,13 @@
     </head>
 <body>
      <h3>Download Record from Mysql Database into excel</h3>  
+     <p>
+         <a href="add_book.php">Add Book</a>
+         <form method="post">
+             <input type="text" name="keyword" placeholder="Search Book name">
+             <button name="submit">Search</button>
+         </form>
+     </p>
      <?php if(count($result)>0): ?>
         <table border="1">
             <tr>
@@ -32,6 +51,7 @@
             <?php endforeach ?>
         </table>
         <a href="export.php">Export to Excel</a>
+        <a href="download.php">Download</a>
      <?php else: ?>
         <p>No Record found</p>
      <?php endif ?>
